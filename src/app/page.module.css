@@ -1,0 +1,92 @@
+/* Dashboard.module.css */
+.dashboard {
+  background-color: #000; /* Black background */
+  color: #f00; /* Red text */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+.chartControls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.chartButton {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 30px;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.chartButton:hover {
+  background-color: #f00;
+  transform: scale(1.05);
+}
+
+.active {
+  background-color: #f00;
+  transform: scale(1.05);
+}
+
+.chartRow {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.chartContainer {
+  background-color: #222;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 600px;
+  transition: all 0.3s ease-in-out;
+}
+
+.tableContainer {
+  margin-top: 30px;
+  background-color: #222;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.table {
+  color: #fff;
+  border-color: #f00;
+}
+
+.thead-dark {
+  background-color: #444;
+  color: #fff;
+}
+
+.attackCountContainer {
+  margin-top: 30px;
+  background-color: #222;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.attackCount {
+  font-size: 2rem;
+  color: #f00;
+}

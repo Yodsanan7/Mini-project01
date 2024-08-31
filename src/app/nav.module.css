@@ -1,0 +1,24 @@
+.navbarBrand {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    
+    color: #007bff; 
+  }
+  
+  .logo {
+    margin-right: 10px; 
+  }
+  
+  .navLink {
+    color: #007bff; 
+    font-weight: bold;
+  }
+  
+  .navLink:hover {
+    color: #0056b3; 
+  }
+  .form-inline .btn {
+    margin-left: 10px;
+  }
+  
