@@ -81,7 +81,6 @@ const Navbar = () => {
 
       {/* แสดงสถานะ LED */}
       <div className={styles.ledStatusContainer}>
-        <h3>สถานะไฟ LED:</h3>
         <p>สถานะปัจจุบัน: {ledStatus}</p> {/* แสดงสถานะปัจจุบัน */}
         {ledStatus === 'RGB_ON' && <div className={`alert alert-success ${styles.ledOn}`}>ไฟเปิดอยู่</div>}
         {ledStatus === 'BUZZER_ON' && <div className={`alert alert-warning ${styles.buzzerOn}`}>เสียงเตือนเปิดอยู่</div>}
