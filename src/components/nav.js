@@ -45,9 +45,6 @@ const Navbar = () => {
               <li className="nav-item">
                 <Link className={`nav-link active ${styles.navLink}`} aria-current="page" href="./">แดชบอร์ด</Link>
               </li>
-              <li className="nav-item">
-                <Link className={`nav-link ${styles.navLink}`} href="/History">ประวัติ</Link>
-              </li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   การควบคุม
