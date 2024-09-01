@@ -21,6 +21,8 @@ export default function Dashboard() {
   const [lastData, setLastData] = useState([]);
   const [allData, setAllData] = useState([]);
   const [selectedChart, setSelectedChart] = useState('doughnut');
+  const [color1, setColor1] = useState('rgba(255, 159, 64, 0.6)');
+  const [color2, setColor2] = useState('rgba(255, 99, 132, 0.6)');
 
   async function fetchLastData() {
     try {
@@ -42,6 +44,25 @@ export default function Dashboard() {
     }
   }
 
+  const sendColorToServer = async (color) => {
+    const [r, g, b] = [
+      parseInt(color.slice(1, 3), 16),
+      parseInt(color.slice(3, 5), 16),
+      parseInt(color.slice(5, 7), 16),
+    ];
+
+    try {
+      await fetch('/api/setColor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ r, g, b }),
+      });
+      alert('Color command sent successfully');
+    } catch (error) {
+      console.error('Error sending color command:', error);
+    }
+  };
+
   const doughnutChartData = lastData.length > 0 ? {
     labels: ['Temperature', 'Distance'],
     datasets: [{
@@ -51,8 +72,8 @@ export default function Dashboard() {
         lastData.reduce((sum, dataPoint) => sum + dataPoint.distance, 0)
       ],
       backgroundColor: [
-        'rgba(255, 159, 64, 0.6)',
-        'rgba(255, 99, 132, 0.6)',
+        color1,
+        color2,
       ],
     }],
   } : null;
@@ -90,14 +111,14 @@ export default function Dashboard() {
         label: 'LDR',
         data: allData.map((dataPoint) => dataPoint.ldr),
         fill: false,
-        borderColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: color1,
         tension: 0.1,
       },
       {
         label: 'VR',
         data: allData.map((dataPoint) => dataPoint.vr),
         fill: false,
-        borderColor: 'rgba(153, 102, 255, 0.6)',
+        borderColor: color2,
         tension: 0.1,
       },
     ],
@@ -116,14 +137,14 @@ export default function Dashboard() {
         label: 'Temperature',
         data: allData.map((dataPoint) => dataPoint.temp),
         fill: false,
-        borderColor: 'rgba(255, 159, 64, 0.6)',
+        borderColor: color1,
         tension: 0.1,
       },
       {
         label: 'Distance',
         data: allData.map((dataPoint) => dataPoint.distance),
         fill: false,
-        borderColor: 'rgba(255, 99, 132, 0.6)',
+        borderColor: color2,
         tension: 0.1,
       },
     ],
@@ -187,6 +208,31 @@ export default function Dashboard() {
         >
           Line Chart Temperature & Distance
         </button>
+      </div>
+
+      <div className={styles.colorControls}>
+        <div>
+          <label>LED Color 1 (RGB): </label>
+          <input
+            type="color"
+            value={color1}
+            onChange={(e) => setColor1(e.target.value)}
+          />
+          <button onClick={() => sendColorToServer(color1)}>
+            Set LED Color 1
+          </button>
+        </div>
+        <div>
+          <label>LED Color 2 (RGB): </label>
+          <input
+            type="color"
+            value={color2}
+            onChange={(e) => setColor2(e.target.value)}
+          />
+          <button onClick={() => sendColorToServer(color2)}>
+            Set LED Color 2
+          </button>
+        </div>
       </div>
 
       <div className={styles.chartRow}>
