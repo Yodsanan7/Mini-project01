@@ -20,7 +20,6 @@ ChartJS.register(
 export default function Dashboard() {
   const [lastData, setLastData] = useState([]);
   const [allData, setAllData] = useState([]);
-  const [attackCount, setAttackCount] = useState(null);
   const [selectedChart, setSelectedChart] = useState('doughnut');
 
   async function fetchLastData() {
@@ -40,16 +39,6 @@ export default function Dashboard() {
       setAllData(data);
     } catch (error) {
       console.error("Error fetching all data:", error);
-    }
-  }
-
-  async function fetchAttackCount() {
-    try {
-      const res = await fetch("/api/attackCount");
-      const data = await res.json();
-      setAttackCount(data.att);
-    } catch (error) {
-      console.error("Error fetching attack count:", error);
     }
   }
 
@@ -166,12 +155,10 @@ export default function Dashboard() {
   useEffect(() => {
     fetchLastData();
     fetchAllData();
-    fetchAttackCount();
 
     const intervalId = setInterval(() => {
       fetchLastData();
       fetchAllData();
-      fetchAttackCount();
     }, 10000);
 
     return () => clearInterval(intervalId);
@@ -221,45 +208,6 @@ export default function Dashboard() {
         ) : (
           <p>No data available for the selected chart</p>
         )}
-      </div>
-
-      <div className={styles.tableContainer}>
-        <h2>Latest Data</h2>
-        <table className={`table table-striped table-bordered ${styles.table}`}>
-          <thead className="thead-dark">
-            <tr>
-              <th>ID</th>
-              <th>LDR</th>
-              <th>VR</th>
-              <th>Temperature</th>
-              <th>Distance</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lastData.map((ldata) => (
-              <tr key={ldata.id}>
-                <td>{ldata.id}</td>
-                <td>{ldata.ldr}</td>
-                <td>{ldata.vr}</td>
-                <td>{ldata.temp}</td>
-                <td>{ldata.distance}</td>
-                <td>
-                  {new Date(ldata.date).toLocaleString('th-TH', {
-                    timeZone: 'Asia/Bangkok',
-                    dateStyle: 'short',
-                    timeStyle: 'short',
-                  })}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className={styles.attackCountContainer}>
-        <h2>Recent Attack Count</h2>
-        <p className={styles.attackCount}>{attackCount !== null ? attackCount : 'Loading...'}</p>
       </div>
     </div>
   );

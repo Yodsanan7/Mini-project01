@@ -5,25 +5,24 @@ export default function HistoryPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
+  async function fetchLastData() {
+    try {
+      const res = await fetch('/api/lastestData');
+      if (!res.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await res.json();
+      setItems(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/alldata');
-        if (!res.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await res.json();
-        setItems(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
+    fetchLastData();
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -31,7 +30,7 @@ export default function HistoryPage() {
 
   return (
     <div className="container my-5">
-      <h1 className="text-center mb-4">Sensor Data History</h1>
+      <h1 className="text-center mb-4">Latest Sensor Data</h1>
       <div className="table-responsive">
         <table className="table table-striped table-bordered">
           <thead className="thead-dark">
