@@ -36,7 +36,6 @@ const Navbar = () => {
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          {/* ลบ Link และ Image ของ Logo */}
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon" />
           </button>
@@ -71,6 +70,15 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
+
+      {/* Separate section for additional control buttons */}
+      <div className="container mt-3">
+        <div className="d-flex justify-content-center">
+          <button type="button" className={`${styles.btn} ${styles.btnSuccess}`} onClick={() => updateLEDStatus('RED', setLEDStatus)}>RED</button>
+          <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} onClick={() => updateLEDStatus('GREEN', setLEDStatus)}>GREEN</button>
+          <button type="button" className={`${styles.btn} ${styles.btnDanger}`} onClick={() => updateLEDStatus('BLUE', setLEDStatus)}>BLUE</button>
+        </div>
+      </div>
 
       {/* แสดงสถานะ LED */}
       <div className={styles.ledStatusContainer}>
