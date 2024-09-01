@@ -8,19 +8,14 @@ const client = new Client({
   connectionString: process.env.DATABASE_URL,
 });
 
-async function dbConnect() {
-  if (!client._connected) {
-    await client.connect();
-    client._connected = true;
-  }
-  return client;
-}
+// เชื่อมต่อฐานข้อมูลเมื่อเริ่มต้น
+client.connect().catch(err => {
+  console.error('Failed to connect to the database', err);
+  process.exit(1);
+});
 
 export async function POST(req) {
-  let client;
   try {
-    client = await dbConnect();
-
     const { r, g, b } = await req.json(); // รับค่า RGB จากคำขอ
 
     if (typeof r === 'number' && typeof g === 'number' && typeof b === 'number') {
@@ -57,10 +52,5 @@ export async function POST(req) {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
-  } finally {
-    if (client) {
-      await client.end();
-      client._connected = false;
-    }
   }
 }
