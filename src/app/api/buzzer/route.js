@@ -23,18 +23,18 @@ export async function POST(request) {
 
     // ตรวจสอบว่ามีแถวที่ id = 87 หรือไม่
     const checkQuery = 'SELECT id FROM yod060 WHERE id = $1';
-    const checkValues = [87];
+    const checkValues = [85];
     const checkResult = await pool.query(checkQuery, checkValues);
 
     if (checkResult.rowCount === 0) {
       // ถ้าไม่มีแถวที่ id = 87 ให้แทรกแถวใหม่
       const insertQuery = 'INSERT INTO yod060 (id, Playnot) VALUES ($1, $2)';
-      const insertValues = [87, note];
+      const insertValues = [85, note];
       await pool.query(insertQuery, insertValues);
     } else {
       // ถ้ามีแถวที่ id = 87 อยู่แล้ว ให้อัพเดต Playnot
       const updateQuery = 'UPDATE yod060 SET Playnot = $1 WHERE id = $2 RETURNING *';
-      const updateValues = [note, 87];
+      const updateValues = [note, 85];
       const updateResult = await pool.query(updateQuery, updateValues);
 
       if (updateResult.rowCount === 0) {
@@ -61,7 +61,7 @@ export async function POST(request) {
 // ฟังก์ชัน GET เพื่อดึง Playnot จากฐานข้อมูล
 export async function GET() {
   try {
-    const result = await pool.query('SELECT Playnot FROM yod060 WHERE id = $1', [87]);
+    const result = await pool.query('SELECT Playnot FROM yod060 WHERE id = $1', [85]);
 
     if (result.rowCount === 0) {
       return new Response(JSON.stringify({ error: 'No record found' }), {
