@@ -1,56 +1,65 @@
-// src/app/api/buzzer/route.js
-import { Pool } from 'pg';
+// src/app/api/receiveData/route.js
+import { Client } from 'pg';
+import fs from 'fs';
+import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = new Pool({
+const client = new Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL.includes("sslmode=require"),
 });
+
+client.connect();
 
 export async function POST(request) {
   try {
-    const { note } = await request.json();
-
-    if (!note || !['C', 'D', 'E', 'F', 'G', 'A', 'B'].includes(note)) {
-      return new Response(JSON.stringify({ error: 'Invalid note' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Check if there is an existing row with id = 87
-    const checkQuery = 'SELECT id FROM yod060 WHERE id = $1';
-    const checkValues = [87];
-    const checkResult = await pool.query(checkQuery, checkValues);
-
-    if (checkResult.rowCount === 0) {
-      // If no row with id = 87, insert a new row
-      const insertQuery = 'INSERT INTO yod060 (id, Playnot) VALUES ($1, $2)';
-      const insertValues = [87, note];
-      await pool.query(insertQuery, insertValues);
-    } else {
-      // If row with id = 87 exists, update it
-      const updateQuery = 'UPDATE yod060 SET Playnot = $1 WHERE id = $2 RETURNING *';
-      const updateValues = [note, 87];
-      const updateResult = await pool.query(updateQuery, updateValues);
-
-      if (updateResult.rowCount === 0) {
-        return new Response(JSON.stringify({ error: 'No rows updated' }), {
-          status: 404,
-          headers: { 'Content-Type': 'application/json' },
-        });
+      const { playnot } = await request.json();
+      if (playnot !== 'C' && playnot !== 'D' && playnot !== 'E') {
+          throw new Error('Invalid status');
       }
+
+      const res = await client.query(
+          'UPDATE "yod060" SET playnot = $1 WHERE id = $2 RETURNING *',
+          [playnot, 87] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต หากมีหลายแถวให้ปรับเป็น ID ที่ต้องการ
+      );
+
+      if (res.rowCount === 0) {
+          throw new Error('No rows updated');
+      }
+
+      return new Response(JSON.stringify({ success: true }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+      });
+  } catch (error) {
+      return new Response(JSON.stringify({ success: false, error: error.message }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+      });
+  }
+}
+
+// ฟังก์ชันจัดการคำขอ GET
+export async function GET() {
+  try {
+    // ดึงข้อมูลสถานะปัจจุบันจากฐานข้อมูล
+    const res = await client.query('SELECT playnot FROM "yod060" WHERE id = $1', [87]);
+
+    if (res.rowCount === 0) {
+      throw new Error('No records found');
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify(res.rows[0]), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('Error updating Buzzer command:', error);
-    return new Response(JSON.stringify({ error: 'Database error' }), {
+    // บันทึกข้อผิดพลาดลงใน log.txt
+    const logPath = path.join(process.cwd(), 'log.txt');
+    fs.appendFileSync(logPath, `${new Date().toISOString()} - ${error.message}\n`);
+
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
