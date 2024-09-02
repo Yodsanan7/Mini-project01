@@ -20,16 +20,28 @@ export async function POST(request) {
       });
     }
 
-    // Update the Playnot column in the yod060 table
-    const query = 'UPDATE yod060 SET Playnot = $1 WHERE id = $2 RETURNING *';
-    const values = [note, 87]; // 87 เป็น ID ของแถวที่คุณต้องการอัปเดต
-    const result = await pool.query(query, values);
+    // Check if there is an existing row with id = 87
+    const checkQuery = 'SELECT id FROM yod060 WHERE id = $1';
+    const checkValues = [87];
+    const checkResult = await pool.query(checkQuery, checkValues);
 
-    if (result.rowCount === 0) {
-      return new Response(JSON.stringify({ error: 'No rows updated' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    if (checkResult.rowCount === 0) {
+      // If no row with id = 87, insert a new row
+      const insertQuery = 'INSERT INTO yod060 (id, Playnot) VALUES ($1, $2)';
+      const insertValues = [87, note];
+      await pool.query(insertQuery, insertValues);
+    } else {
+      // If row with id = 87 exists, update it
+      const updateQuery = 'UPDATE yod060 SET Playnot = $1 WHERE id = $2 RETURNING *';
+      const updateValues = [note, 87];
+      const updateResult = await pool.query(updateQuery, updateValues);
+
+      if (updateResult.rowCount === 0) {
+        return new Response(JSON.stringify({ error: 'No rows updated' }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     return new Response(JSON.stringify({ success: true }), {
