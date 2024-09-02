@@ -61,7 +61,7 @@ export async function POST(request) {
 export async function GET(request) {
   try {
     const url = new URL(request.url);
-    const id = url.searchParams.get('id') || 85;
+    const id = url.searchParams.get('id') || 87;
 
     const result = await pool.query('SELECT playnot FROM yod060 WHERE id = $1', [id]);
 
