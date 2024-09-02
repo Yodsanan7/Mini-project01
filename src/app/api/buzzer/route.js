@@ -15,7 +15,7 @@ client.connect();
 export async function POST(request) {
   try {
       const { playnot } = await request.json();
-      if (playnot !== 'C' && playnot !== 'D' && playnot !== 'E') {
+      if (playnot !== 'C' && playnot !== 'D' && playnot !== 'E' && playnot !== 'B') {
           throw new Error('Invalid status');
       }
 
