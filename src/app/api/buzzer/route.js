@@ -9,7 +9,7 @@ const pool = new Pool({
   ssl: process.env.DATABASE_URL.includes("sslmode=require"),
 });
 
-// ฟังก์ชัน POST เพื่ออัพเดต Playnot ในฐานข้อมูล
+// ฟังก์ชัน POST เพื่ออัพเดต playnot ในฐานข้อมูล
 export async function POST(request) {
   try {
     const { note } = await request.json();
@@ -21,18 +21,18 @@ export async function POST(request) {
       });
     }
 
-    // ตรวจสอบว่ามีแถวที่ id = 87 หรือไม่
+    // ตรวจสอบว่ามีแถวที่ id = 85 หรือไม่
     const checkQuery = 'SELECT id FROM yod060 WHERE id = $1';
     const checkValues = [85];
     const checkResult = await pool.query(checkQuery, checkValues);
 
     if (checkResult.rowCount === 0) {
-      // ถ้าไม่มีแถวที่ id = 87 ให้แทรกแถวใหม่
+      // ถ้าไม่มีแถวที่ id = 85 ให้แทรกแถวใหม่
       const insertQuery = 'INSERT INTO yod060 (id, playnot) VALUES ($1, $2)';
       const insertValues = [85, note];
       await pool.query(insertQuery, insertValues);
     } else {
-      // ถ้ามีแถวที่ id = 87 อยู่แล้ว ให้อัพเดต Playnot
+      // ถ้ามีแถวที่ id = 85 อยู่แล้ว ให้อัพเดต playnot
       const updateQuery = 'UPDATE yod060 SET playnot = $1 WHERE id = $2 RETURNING *';
       const updateValues = [note, 85];
       const updateResult = await pool.query(updateQuery, updateValues);
@@ -58,7 +58,7 @@ export async function POST(request) {
   }
 }
 
-// ฟังก์ชัน GET เพื่อดึง Playnot จากฐานข้อมูล
+// ฟังก์ชัน GET เพื่อดึง playnot จากฐานข้อมูล
 export async function GET() {
   try {
     const result = await pool.query('SELECT playnot FROM yod060 WHERE id = $1', [85]);

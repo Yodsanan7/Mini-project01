@@ -17,27 +17,26 @@ async function dbConnect() {
   return client;
 }
 
+
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     let client;
     try {
       // Connect to the database
       client = await dbConnect();
-      
-      const command = req.body.command;  // Get the command from the request body
 
-      // Insert the command into the database
+      // Insert the command into the database for the buzzer
       await client.query(`
         INSERT INTO "yod060" ("command", "date")
         VALUES ($1, NOW())
-      `, [command]);
+      `, ['BUZZER_ON']);
 
-      console.log(`Control command (${command}) stored in the database`);
+      console.log("Buzzer control command stored in the database");
 
       // Return a success response
-      res.status(200).json({ message: `Control command (${command}) received` });
+      res.status(200).json({ message: 'Buzzer control command received' });
     } catch (error) {
-      console.error('Error in control route:', error);
+      console.error('Error in controlBuzzer route:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     } finally {
       // Ensure the database client is closed
