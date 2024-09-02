@@ -23,18 +23,18 @@ export async function POST(request) {
 
     // ตรวจสอบว่ามีแถวที่ id = 85 หรือไม่
     const checkQuery = 'SELECT id FROM yod060 WHERE id = $1';
-    const checkValues = [85];
+    const checkValues = [87];
     const checkResult = await pool.query(checkQuery, checkValues);
 
     if (checkResult.rowCount === 0) {
       // ถ้าไม่มีแถวที่ id = 85 ให้แทรกแถวใหม่
       const insertQuery = 'INSERT INTO yod060 (id, playnot) VALUES ($1, $2)';
-      const insertValues = [85, note];
+      const insertValues = [87, note];
       await pool.query(insertQuery, insertValues);
     } else {
       // ถ้ามีแถวที่ id = 85 อยู่แล้ว ให้อัพเดต playnot
       const updateQuery = 'UPDATE yod060 SET playnot = $1 WHERE id = $2 RETURNING *';
-      const updateValues = [note, 85];
+      const updateValues = [note, 87];
       const updateResult = await pool.query(updateQuery, updateValues);
 
       if (updateResult.rowCount === 0) {
