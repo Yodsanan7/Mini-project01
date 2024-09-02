@@ -21,6 +21,8 @@ export default function Dashboard() {
   const [lastData, setLastData] = useState([]);
   const [allData, setAllData] = useState([]);
   const [selectedChart, setSelectedChart] = useState('doughnut');
+  const [loadingBuzzer, setLoadingBuzzer] = useState(false);
+  const [buzzerError, setBuzzerError] = useState(null);
 
   async function fetchLastData() {
     try {
@@ -39,6 +41,31 @@ export default function Dashboard() {
       setAllData(data);
     } catch (error) {
       console.error("Error fetching all data:", error);
+    }
+  }
+
+  async function sendNoteToBuzzer(note) {
+    setLoadingBuzzer(true);
+    setBuzzerError(null);
+
+    try {
+      const response = await fetch('/api/buzzer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'An error occurred');
+      }
+
+      alert(`Note ${note} sent successfully`);
+    } catch (error) {
+      setBuzzerError(error.message);
+    } finally {
+      setLoadingBuzzer(false);
     }
   }
 
@@ -242,6 +269,22 @@ export default function Dashboard() {
         ) : (
           <p>No data available for the selected chart</p>
         )}
+      </div>
+
+      <div className={styles.buzzerControls}>
+        <h2>Control Buzzer</h2>
+        <div>
+          {['C', 'D', 'E', 'F', 'G', 'A', 'B'].map(note => (
+            <button
+              key={note}
+              onClick={() => sendNoteToBuzzer(note)}
+              disabled={loadingBuzzer}
+            >
+              {loadingBuzzer ? 'Sending...' : `Play Note ${note}`}
+            </button>
+          ))}
+        </div>
+        {buzzerError && <p>{buzzerError}</p>}
       </div>
     </div>
   );
