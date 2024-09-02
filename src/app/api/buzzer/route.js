@@ -1,4 +1,3 @@
-// src/app/api/buzzer/route.js
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
@@ -21,18 +20,18 @@ export async function POST(request) {
       });
     }
 
-    // ตรวจสอบว่ามีแถวที่ id = 85 หรือไม่
+    // ตรวจสอบว่ามีแถวที่ id = 87 หรือไม่
     const checkQuery = 'SELECT id FROM yod060 WHERE id = $1';
     const checkValues = [87];
     const checkResult = await pool.query(checkQuery, checkValues);
 
     if (checkResult.rowCount === 0) {
-      // ถ้าไม่มีแถวที่ id = 85 ให้แทรกแถวใหม่
+      // ถ้าไม่มีแถวที่ id = 87 ให้แทรกแถวใหม่
       const insertQuery = 'INSERT INTO yod060 (id, playnot) VALUES ($1, $2)';
       const insertValues = [87, note];
       await pool.query(insertQuery, insertValues);
     } else {
-      // ถ้ามีแถวที่ id = 85 อยู่แล้ว ให้อัพเดต playnot
+      // ถ้ามีแถวที่ id = 87 อยู่แล้ว ให้อัพเดต playnot
       const updateQuery = 'UPDATE yod060 SET playnot = $1 WHERE id = $2 RETURNING *';
       const updateValues = [note, 87];
       const updateResult = await pool.query(updateQuery, updateValues);
@@ -59,9 +58,12 @@ export async function POST(request) {
 }
 
 // ฟังก์ชัน GET เพื่อดึง playnot จากฐานข้อมูล
-export async function GET() {
+export async function GET(request) {
   try {
-    const result = await pool.query('SELECT playnot FROM yod060 WHERE id = $1', [85]);
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id') || 85;
+
+    const result = await pool.query('SELECT playnot FROM yod060 WHERE id = $1', [id]);
 
     if (result.rowCount === 0) {
       return new Response(JSON.stringify({ error: 'No record found' }), {
