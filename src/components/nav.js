@@ -70,8 +70,6 @@ const Navbar = () => {
             </li>
           </ul>
           <form className="d-flex">
-            <button type="button" className="btn btn-outline-success me-md-2" onClick={() => updateLEDStatus('RGB_ON')}>เปิดไฟ</button>
-            <button type="button" className="btn btn-outline-danger" onClick={() => updateLEDStatus('OFF')}>ปิด</button>
             <button type="button" className="btn btn-outline-success me-md-2" onClick={() => updateBuzzer('BUZZER_ON')}>เปิด BUZZER</button>
             <button type="button" className="btn btn-outline-danger" onClick={() => updateBuzzer('OFF')}>ปิด BUZZER</button>
           </form>
