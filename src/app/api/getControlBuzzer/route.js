@@ -15,12 +15,12 @@ client.connect();
 export async function POST(request) {
   try {
       const { command } = await request.json();
-      if (command !== 'RGB_ON' && command !== 'BUZZER_ON' && command !== 'OFF') {
+      if (command !== 'BUZZER_ON' && command !== 'OFF') {
           throw new Error('Invalid status');
       }
 
       const res = await client.query(
-          'UPDATE "yod060" SET command = $1 WHERE id = $2 RETURNING *',
+          'UPDATE "yod060" SET buzzer_status = $1 WHERE id = $2 RETURNING *',
           [command, 87] // ใช้ `1` เป็น ID ของแถวที่ต้องการอัปเดต หากมีหลายแถวให้ปรับเป็น ID ที่ต้องการ
       );
 
@@ -37,31 +37,5 @@ export async function POST(request) {
           status: 500,
           headers: { 'Content-Type': 'application/json' },
       });
-  }
-}
-
-// ฟังก์ชันจัดการคำขอ GET
-export async function GET() {
-  try {
-    // ดึงข้อมูลสถานะปัจจุบันจากฐานข้อมูล
-    const res = await client.query('SELECT command FROM "yod060" WHERE id = $1', [87]);
-
-    if (res.rowCount === 0) {
-      throw new Error('No records found');
-    }
-
-    return new Response(JSON.stringify(res.rows[0]), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    // บันทึกข้อผิดพลาดลงใน log.txt
-    const logPath = path.join(process.cwd(), 'log.txt');
-    fs.appendFileSync(logPath, `${new Date().toISOString()} - ${error.message}\n`);
-
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
   }
 }

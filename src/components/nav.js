@@ -12,7 +12,31 @@ const updateLEDStatus = async (command) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ command }),
+      body: JSON.stringify({ command}),
+    });
+
+    const data = await response.json();
+
+    console.log('ข้อมูลที่ตอบกลับ:', data);  // เพิ่มการตรวจสอบข้อมูลที่ได้รับ
+    if (data.success) {
+      alert(`อัปเดตคำสั่งเป็น ${command} เรียบร้อยแล้ว`);
+    } else {
+      alert('ไม่สามารถอัปเดตคำสั่งได้');
+    }
+  } catch (error) {
+    console.error('เกิดข้อผิดพลาดในการอัปเดตคำสั่ง:', error);
+    alert('เกิดข้อผิดพลาดในการอัปเดตคำสั่ง');
+  }
+};
+
+const updateBuzzer = async (command) => {
+  try {
+    const response = await fetch('/api/getControlBuzzer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ command}),
     });
 
     const data = await response.json();
@@ -48,6 +72,8 @@ const Navbar = () => {
           <form className="d-flex">
             <button type="button" className="btn btn-outline-success me-md-2" onClick={() => updateLEDStatus('RGB_ON')}>เปิดไฟ</button>
             <button type="button" className="btn btn-outline-danger" onClick={() => updateLEDStatus('OFF')}>ปิด</button>
+            <button type="button" className="btn btn-outline-success me-md-2" onClick={() => updateBuzzer('BUZZER_ON')}>เปิด BUZZER</button>
+            <button type="button" className="btn btn-outline-danger" onClick={() => updateBuzzer('OFF')}>ปิด BUZZER</button>
           </form>
         </div>
       </div>
