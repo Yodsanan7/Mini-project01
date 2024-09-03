@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Line, Doughnut } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import styles from './Dashboard.module.css';
-import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ChartJS.register(
@@ -13,14 +13,13 @@ ChartJS.register(
   PointElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement
+  Legend
 );
 
 export default function Dashboard() {
   const [lastData, setLastData] = useState([]);
   const [allData, setAllData] = useState([]);
-  const [selectedChart, setSelectedChart] = useState('doughnut');
+  const [selectedChart, setSelectedChart] = useState('line1');
   const [loadingBuzzer, setLoadingBuzzer] = useState(false);
   const [buzzerError, setBuzzerError] = useState(null);
 
@@ -68,41 +67,6 @@ export default function Dashboard() {
       setLoadingBuzzer(false);
     }
   }
-
-  const doughnutChartData = lastData.length > 0 ? {
-    labels: ['อุณหภูมิ', 'ระยะทาง'],
-    datasets: [{
-      label: 'ข้อมูลเซ็นเซอร์',
-      data: [
-        lastData.reduce((sum, dataPoint) => sum + dataPoint.temp, 0),
-        lastData.reduce((sum, dataPoint) => sum + dataPoint.distance, 0)
-      ],
-      backgroundColor: [
-        'rgba(255, 159, 64, 0.6)',
-        'rgba(255, 99, 132, 0.6)',
-      ],
-    }],
-  } : null;
-
-  const doughnutChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      tooltip: {
-        callbacks: {
-          title: function(tooltipItem) {
-            return tooltipItem[0].label;
-          },
-          label: function(tooltipItem) {
-            return `${tooltipItem.dataset.label}: ${tooltipItem.raw}`;
-          },
-        },
-      },
-      cutout: '70%',
-    },
-  };
 
   const lineChartData1 = allData.length > 0 ? {
     labels: allData.map((dataPoint) => 
@@ -171,12 +135,6 @@ export default function Dashboard() {
 
       <div className={styles.chartControls}>
         <button
-          className={`btn btn-primary ${selectedChart === 'doughnut' ? 'active' : ''}`}
-          onClick={() => setSelectedChart('doughnut')}
-        >
-          กราฟโดนัท
-        </button>
-        <button
           className={`btn btn-secondary ${selectedChart === 'line1' ? 'active' : ''}`}
           onClick={() => setSelectedChart('line1')}
         >
@@ -219,12 +177,7 @@ export default function Dashboard() {
           </table>
         </div>
 
-        {selectedChart === 'doughnut' && lastData.length > 0 && doughnutChartData ? (
-          <div className={styles.chartContainer}>
-            <h2>กราฟโดนัท: อุณหภูมิและระยะทาง</h2>
-            <Doughnut data={doughnutChartData} options={doughnutChartOptions} />
-          </div>
-        ) : selectedChart === 'line1' && allData.length > 0 && lineChartData1 ? (
+        {selectedChart === 'line1' && allData.length > 0 && lineChartData1 ? (
           <div className={styles.chartContainer}>
             <h2>กราฟเส้น: แนวโน้ม LDR & VR</h2>
             <Line data={lineChartData1} options={lineChartOptions} />

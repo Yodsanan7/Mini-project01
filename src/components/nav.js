@@ -44,9 +44,6 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className={`nav-link active ${styles.navLink}`} aria-current="page" href="./">แดชบอร์ด</Link>
             </li>
-            <li className="nav-item">
-              <Link className={`nav-link ${styles.navLink}`} href="/History">ประวัติ</Link>
-            </li>
           </ul>
           <form className="d-flex">
             <button type="button" className="btn btn-outline-success me-md-2" onClick={() => updateLEDStatus('RGB_ON')}>เปิดระบบ</button>
