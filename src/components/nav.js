@@ -1,4 +1,4 @@
-"use client"; // This makes the component a Client Component
+"use client"; // นี้ทำให้คอมโพเนนต์เป็น Client Component
 
 import Link from "next/link";
 import Image from "next/image";
@@ -17,15 +17,15 @@ const updateLEDStatus = async (command) => {
 
     const data = await response.json();
 
-    console.log('Response Data:', data);  // เพิ่มการตรวจสอบข้อมูลที่ได้รับ
+    console.log('ข้อมูลที่ตอบกลับ:', data);  // เพิ่มการตรวจสอบข้อมูลที่ได้รับ
     if (data.success) {
-      alert(`Command updated to ${command}`);
+      alert(`อัปเดตคำสั่งเป็น ${command} เรียบร้อยแล้ว`);
     } else {
-      alert('Failed to update Command');
+      alert('ไม่สามารถอัปเดตคำสั่งได้');
     }
   } catch (error) {
-    console.error('Error updating Command:', error);
-    alert('Error updating Command');
+    console.error('เกิดข้อผิดพลาดในการอัปเดตคำสั่ง:', error);
+    alert('เกิดข้อผิดพลาดในการอัปเดตคำสั่ง');
   }
 };
 
@@ -34,23 +34,23 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
         <Link className={`navbar-brand ${styles.navbarBrand}`} href="./">
-          <Image src={Logo} alt="Project Logo" width={60} height={60} className="d-inline-block align-text-top mr-1" />
+          <Image src={Logo} alt="โลโก้โปรเจกต์" width={60} height={60} className="d-inline-block align-text-top mr-1" />
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="สลับการนำทาง">
           <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className={`nav-link active ${styles.navLink}`} aria-current="page" href="./">Dashboard</Link>
+              <Link className={`nav-link active ${styles.navLink}`} aria-current="page" href="./">แดชบอร์ด</Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${styles.navLink}`} href="/History">History</Link>
+              <Link className={`nav-link ${styles.navLink}`} href="/History">ประวัติ</Link>
             </li>
           </ul>
           <form className="d-flex">
-            <button type="button" className="btn btn-outline-success me-md-2" onClick={() => updateLEDStatus('RGB_ON')}>Open System</button>
-            <button type="button" className="btn btn-outline-danger" onClick={() => updateLEDStatus('OFF')}>Off</button>
+            <button type="button" className="btn btn-outline-success me-md-2" onClick={() => updateLEDStatus('RGB_ON')}>เปิดระบบ</button>
+            <button type="button" className="btn btn-outline-danger" onClick={() => updateLEDStatus('OFF')}>ปิด</button>
           </form>
         </div>
       </div>
