@@ -130,32 +130,6 @@ export default function Dashboard() {
     ],
   } : null;
 
-  const lineChartData2 = allData.length > 0 ? {
-    labels: allData.map((dataPoint) => 
-      new Date(dataPoint.date).toLocaleString('th-TH', {
-        timeZone: 'Asia/Bangkok',
-        dateStyle: 'short',
-        timeStyle: 'short',
-      })
-    ),
-    datasets: [
-      {
-        label: 'อุณหภูมิ',
-        data: allData.map((dataPoint) => dataPoint.temp),
-        fill: false,
-        borderColor: 'rgba(255, 159, 64, 0.6)',
-        tension: 0.1,
-      },
-      {
-        label: 'ระยะทาง',
-        data: allData.map((dataPoint) => dataPoint.distance),
-        fill: false,
-        borderColor: 'rgba(255, 99, 132, 0.6)',
-        tension: 0.1,
-      },
-    ],
-  } : null;
-
   const lineChartOptions = {
     responsive: true,
     plugins: {
@@ -208,12 +182,6 @@ export default function Dashboard() {
         >
           กราฟเส้น LDR & VR
         </button>
-        <button
-          className={`btn btn-success ${selectedChart === 'line2' ? 'active' : ''}`}
-          onClick={() => setSelectedChart('line2')}
-        >
-          กราฟเส้น อุณหภูมิ & ระยะทาง
-        </button>
       </div>
 
       <div className={styles.chartRow}>
@@ -260,11 +228,6 @@ export default function Dashboard() {
           <div className={styles.chartContainer}>
             <h2>กราฟเส้น: แนวโน้ม LDR & VR</h2>
             <Line data={lineChartData1} options={lineChartOptions} />
-          </div>
-        ) : selectedChart === 'line2' && allData.length > 0 && lineChartData2 ? (
-          <div className={styles.chartContainer}>
-            <h2>กราฟเส้น: แนวโน้มอุณหภูมิและระยะทาง</h2>
-            <Line data={lineChartData2} options={lineChartOptions} />
           </div>
         ) : (
           <p>ไม่มีข้อมูลสำหรับกราฟที่เลือก</p>
